@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "227647625485",
+    "firebase_url": "https://fbtestauth-c36e4.firebaseio.com",
+    "project_id": "fbtestauth-c36e4",
+    "storage_bucket": "fbtestauth-c36e4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:227647625485:android:01b9cf45392abc8b",
+        "android_client_info": {
+          "package_name": "com.taca.app.auth13"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "227647625485-q8g45200rspvu2k91cgq2b29ia6bqisk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmrC5BEj6gQVdn25t1pXbsxjHkDsdVCQg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
