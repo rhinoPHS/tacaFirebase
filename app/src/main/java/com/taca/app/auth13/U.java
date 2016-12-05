@@ -17,6 +17,6 @@ public class U {
     //로그 출력용
     String TAG = "FB";
     public void log(String msg){
-        Log.i(TAG,msg);
+        Log.i(TAG,""+msg);
     }
 }
