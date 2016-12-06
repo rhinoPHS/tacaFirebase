@@ -12,6 +12,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Iterator;
+
 import static android.R.attr.key;
 import static android.R.id.list;
 import static com.google.android.gms.internal.zzwy.fb;
@@ -45,7 +47,8 @@ public class MatchActivity extends AppCompatActivity {
         U.getInstance().log(mRef.toString());
 
     }
-    public void onMatch(View view){
+
+    public void onMatch(View view) {
         U.getInstance().log("고객센터와 채팅(매치)");
 
         // 루트 > list > 본인아이디 > cscenter(고객센터 아이디) 여기까지의 경로가 존재하는지 check
@@ -59,7 +62,7 @@ public class MatchActivity extends AppCompatActivity {
                 //리스너를 유지하는 정책을 결정해야 한다.
                 query.removeEventListener(this);  // this -> ValueEventListener
 
-                if(dataSnapshot.getValue() == null){
+                if (dataSnapshot.getValue() == null) {
                     //처음으로 채팅을 한다.
 
                     //mRef.child("channel").push() 자체적으는 생성이 안되고 최종적으로 값이 존재햐야 한다.
@@ -68,7 +71,7 @@ public class MatchActivity extends AppCompatActivity {
                     DatabaseReference ref = mRef.child("channel").push();
                     U.getInstance().log("고유키 -> " + ref.getKey());
 
-                    ExChatModel msg = new ExChatModel("관리자","채팅방이 생성됐습니다",0,U.getInstance().curTmEx(),0);
+                    ExChatModel msg = new ExChatModel("관리자", "채팅방이 생성됐습니다", 0, U.getInstance().curTmEx(), 0);
 
 
                     //1. 채팅방 리스트 : 채널에 한개의 줄기를 생성해 둔다.
@@ -76,7 +79,7 @@ public class MatchActivity extends AppCompatActivity {
 
                     //2. 나의 채팅리스트를 구성한다. (채팅 채널 정보를 가지고)
                     //실습 : ChatListModel를 구성하여 세팅하기
-                    ChatListModel clm = new ChatListModel(ref.getKey(),cs,"",0,0,1);
+                    ChatListModel clm = new ChatListModel(ref.getKey(), cs, "", 0, 0, 1);
 
                     //쌍방향!!! 내 입장에서 가지 생성하면
                     mRef.child("list").child(uid).child(cs).push().setValue(clm);
@@ -86,18 +89,34 @@ public class MatchActivity extends AppCompatActivity {
                     U.getInstance().log("채팅 채널 생성 후 채팅방 이동");
 
                     //채팅방이동
-                    goChat(uid,cs,ref.getKey());
-                }
-                else{
+                    goChat(uid, cs, ref.getKey());
+                } else {
                     //이미 채팅을 했었다.
                     //채팅방으로 이동
 
                     //해보기!!!!
                     //uid와 cs 사이에 채팅 채널값 획득
                     //dataSnapshot에서 키를 구해서 전체 노드를 완성 후 데이터 획득
-                    U.getInstance().log(dataSnapshot.toString());
+                    //아래는 채널정보를 구하는 방식, 채널정보를 로컬에 저장
+                    Iterator<DataSnapshot> ds = dataSnapshot.getChildren().iterator();
+                    while(ds.hasNext()) {
+//                        U.getInstance().log("사용자와 id 밑에 있는 노드 값:" + ds.next().getKey());
 
+                        mRef.child("list").child(uid).child(cs).child(ds.next().getKey())
+                                .addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        ChatListModel cm = dataSnapshot.getValue(ChatListModel.class);
+                                        goChat(uid,cs,cm.getChannel());
+                                    }
 
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+//                        break;
+                    }
                     U.getInstance().log("채팅방이동");
                     //채팅방이동 여러번 뜸, 리스너가 계속 작동해서 그럼, 리스너 이벤트를 죽이거나
                     //리스너이벤트가 속한 액티비티를 죽이는데 이번은 버튼을 눌러사 가기때문에 일회성 리스너이벤트 죽임 -- 55번줄
@@ -110,9 +129,6 @@ public class MatchActivity extends AppCompatActivity {
 
             }
         });
-
-
-
 
 
 //mRef.child("chat").push().setValue(msg); // 줄기1 chat, 줄기2 push(랜덤값), 값 setValue(msg)
@@ -133,12 +149,13 @@ public class MatchActivity extends AppCompatActivity {
 //            U.getInstance().log(e.getMessage());
 //        }
     }
+
     //채팅방으로 이동
-    public void goChat(String myId, String youId, String channel){
-        Intent intent = new Intent(this,ExtChatActivity.class);
-        intent.putExtra("myId",myId);
-        intent.putExtra("youId",youId);
-        intent.putExtra("channel",channel);
+    public void goChat(String myId, String youId, String channel) {
+        Intent intent = new Intent(this, ExtChatActivity.class);
+        intent.putExtra("myId", myId);
+        intent.putExtra("youId", youId);
+        intent.putExtra("channel", channel);
         startActivity(intent);
     }
 }
