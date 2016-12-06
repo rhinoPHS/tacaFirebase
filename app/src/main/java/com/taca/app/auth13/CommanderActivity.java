@@ -1,5 +1,6 @@
 package com.taca.app.auth13;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,7 +10,7 @@ public class CommanderActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Intent intent = new Intent(this,BasicChatActivity.class);
+        Intent intent = new Intent(this,MatchActivity.class);
         startActivity(intent);
         finish();
     }

@@ -14,6 +14,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -50,6 +51,7 @@ public class BasicChatActivity extends AppCompatActivity {
 
         //chat이라는 줄기에 데이터가 변화하는 것을 감지하여 이벤트를 처리한다.
         //액티비티를 파괴 하지 않는 이상 리스너는 물려있음.
+        //리스너1
         mRef.child("chat").addChildEventListener(new ChildEventListener() {
             //채팅 추가
             //앱이 시작하자 마자 자식이 있으면 구동, 전송 해도 구동
@@ -94,6 +96,34 @@ public class BasicChatActivity extends AppCompatActivity {
 
             }
         });
+        //리스너2
+        mRef.child("chat").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                U.getInstance().log("===addValueEventListener===");
+                U.getInstance().log(dataSnapshot.toString());
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        //리스너3
+        mRef.child("chat").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                U.getInstance().log("===addListenerForSingleValueEvent===");
+                U.getInstance().log(dataSnapshot.toString());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     public void onSend(View view) {
@@ -104,7 +134,7 @@ public class BasicChatActivity extends AppCompatActivity {
             return;
         }
         BasicChatModel msg = new BasicChatModel("guest", chatMsg);
-        mRef.child("chat").push().setValue(msg);
+        mRef.child("chat").push().setValue(msg); // 줄기1 chat, 줄기2 push(랜덤값), 값 setValue(msg)
     }
 
     class ViewHolder{

@@ -1,5 +1,6 @@
 package com.taca.app.auth13;
 
+import android.provider.Settings;
 import android.util.Log;
 
 /**
@@ -18,5 +19,13 @@ public class U {
     String TAG = "FB";
     public void log(String msg){
         Log.i(TAG,""+msg);
+    }
+
+    //현재시간,클라이언트의 시간
+    public String curTm(){
+        return System.currentTimeMillis()+"";
+    }
+    public long curTmEx(){
+        return System.currentTimeMillis();
     }
 }
